@@ -1,6 +1,7 @@
 package com.ibbhub.album;
 
 import android.media.ExifInterface;
+import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -13,7 +14,7 @@ import java.util.Date;
  * @description ：
  * @email ：chezi008@163.com
  */
-class FileUtils {
+public class FileUtils {
     public static final String TAG = FileUtils.class.getSimpleName();
 
     public static Date parseDate(File file) {
@@ -94,5 +95,16 @@ class FileUtils {
             System.out.println("删除单个文件失败：" + fileName + "不存在！");
             return false;
         }
+    }
+
+    /**
+     * 判断SDCard根目录是否可用
+     *
+     * @return boolean
+     */
+    public static boolean isSDCardEnable() {
+        return Environment.getExternalStorageState().equals(
+                Environment.MEDIA_MOUNTED) && Environment.getExternalStorageDirectory().canWrite();
+
     }
 }

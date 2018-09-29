@@ -1,27 +1,42 @@
-apply plugin: 'com.android.library'
+//apply plugin: 'com.android.library'
+apply plugin: 'com.android.application'
+//android {
+//    compileSdkVersion 27
+//    defaultConfig {
+//        minSdkVersion 18
+//        targetSdkVersion 27
+//        versionCode 1
+//        versionName "1.0.0"
+//
+//        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+//
+//    }
+//
+//    buildTypes {
+//        release {
+//            minifyEnabled false
+//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+//        }
+//    }
+//
+//}
 
 android {
     compileSdkVersion 27
-
-
-
     defaultConfig {
+        applicationId "com.ibbhub.albumdemo1"
         minSdkVersion 18
         targetSdkVersion 27
         versionCode 1
-        versionName "1.0.0"
-
+        versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
     }
-
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
 }
 
 dependencies {
@@ -35,20 +50,17 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
     implementation 'com.android.support:recyclerview-v7:27.1.1'
-    //adapter dependence
-//    implementation 'com.hannesdorfmann:adapterdelegates3:3.0.1'
-    implementation 'com.ibbhub.android:adapterdelegate:1.0.0'
-    //retrofit2
-    implementation 'com.squareup.retrofit2:retrofit:2.2.0'
-    //RxJava2 请求结果适配器
-    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.2.0'
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
 
-    //eventbus
-    implementation "org.greenrobot:eventbus:3.1.1"
-    //videoPlayer
-    implementation 'com.ycjiang:VideoPlayModule:2.1.85'
     //photoView
     implementation 'com.github.chrisbanes:PhotoView:2.0.0'
+
+    compile 'com.squareup.okhttp3:okhttp:3.2.0'
+    compile 'com.squareup.retrofit:converter-gson:2.0.0-beta2'
+
+    //图片加载框架
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.squareup.okhttp:okhttp:2.7.5'
+    compile 'com.squareup.okio:okio:1.7.0'
 }
 apply from: "bintrayUpload.gradle"

@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.github.chrisbanes.photoview.PhotoView;
-import com.ibbhub.adapterdelegate.AdapterDelegate;
+import com.ibbhub.album.adapter.AdapterDelegate;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ import java.util.List;
     private String TAG = getClass().getSimpleName();
     @Override
     public boolean isForViewType(@NonNull List<AlbumBean> items, int position) {
-        return FileUtils.isImageFile(items.get(position).path);
+        return FileUtils.isImageFile(items.get(position).getFile());
     }
 
     @NonNull
@@ -34,7 +34,7 @@ import java.util.List;
     public void onBindViewHolder(@NonNull List<AlbumBean> items, int position, @NonNull RecyclerView.ViewHolder holder, @NonNull List<Object> payloads) {
         AlbumBean mb = items.get(position);
 //        Log.d(TAG, "onBindViewHolder: "+mb.path);
-        TaHelper.getInstance().loadImage(mb.path, ((PreviewPhotoHolder) holder).ptView);
+        TaHelper.getInstance().loadImage(mb.getFile(), ((PreviewPhotoHolder) holder).ptView);
     }
 
     static class PreviewPhotoHolder extends RecyclerView.ViewHolder {

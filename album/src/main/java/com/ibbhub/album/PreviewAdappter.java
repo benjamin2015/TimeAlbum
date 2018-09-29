@@ -1,6 +1,6 @@
 package com.ibbhub.album;
 
-import com.ibbhub.adapterdelegate.ListDelegationAdapter;
+import com.ibbhub.album.adapter.ListDelegationAdapter;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ import java.util.List;
 
     public PreviewAdappter(List<AlbumBean> data) {
         delegatesManager.addDelegate(new PreviewPhotoDelegate());
-        delegatesManager.addDelegate(new PreviewVideoDelegate());
+//        delegatesManager.addDelegate(new PreviewVideoDelegate());
         setItems(data);
     }
 }

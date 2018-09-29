@@ -52,7 +52,7 @@ public class AlbumPreviewFragment extends Fragment {
 
             @Override
             public void onShareClick() {
-                TaShareManager.getInstance().openShare(getContext(), mData.get(position).path);
+                TaShareManager.getInstance().openShare(getContext(), mData.get(position).getFile());
             }
         });
 

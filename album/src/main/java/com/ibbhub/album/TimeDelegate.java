@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
-import com.ibbhub.adapterdelegate.AbsFallbackAdapterDelegate;
+import com.ibbhub.album.adapter.AbsFallbackAdapterDelegate;
 
 import java.util.List;
 

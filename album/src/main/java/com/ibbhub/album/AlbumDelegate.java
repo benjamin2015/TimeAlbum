@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 
-import com.ibbhub.adapterdelegate.AbsFallbackAdapterDelegate;
+import com.ibbhub.album.adapter.AbsFallbackAdapterDelegate;
 
 import java.util.List;
 
@@ -32,9 +32,9 @@ class AlbumDelegate extends AbsFallbackAdapterDelegate<List<AlbumBean>> {
         AlbumBean albumBean = items.get(position);
         AlbumDelegateHolder mediaHolder = (AlbumDelegateHolder) holder;
         mediaHolder.setAlbumBean(albumBean);
-        mediaHolder.taAlbumView.loadImage(albumBean.path);
+        mediaHolder.taAlbumView.loadImage(albumBean.getFile());
         //判断类型
-        boolean isImage = FileUtils.isImageFile(albumBean.path);
+        boolean isImage = FileUtils.isImageFile(albumBean.getFile());
         mediaHolder.taAlbumView.setStyle(isImage ? TaAlbumView.STYLE_PHOTO : TaAlbumView.STYLE_VIDEO);
         mediaHolder.taAlbumView.setChooseStyle(AlbumFragment.isChooseMode);
         mediaHolder.taAlbumView.setChecked(albumBean.isChecked);

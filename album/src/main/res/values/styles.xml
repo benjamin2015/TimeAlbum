@@ -1,0 +1,43 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Translucent</item>
+    </style>
+
+    <!--<style name="AppTheme" parent="@android:style/Theme.Light.NoTitleBar">-->
+        <!--&lt;!&ndash; Customize your theme here. &ndash;&gt;-->
+        <!--<item name="android:windowAnimationStyle">@android:style/Animation.Translucent</item>-->
+    <!--</style>-->
+    <!--<style name="Toolbar">-->
+        <!--<item name="android:theme">@style/Album.Theme.Toolbar</item>-->
+        <!--<item name="android:layout_width">match_parent</item>-->
+        <!--<item name="android:layout_height">?actionBarSize</item>-->
+        <!--<item name="android:background">?colorPrimary</item>-->
+        <!--<item name="navigationIcon">@drawable/ic_back_white</item>-->
+        <!--<item name="titleTextColor">@color/albumFontLight</item>-->
+        <!--<item name="subtitleTextColor">@color/albumFontLight</item>-->
+        <!--<item name="popupTheme">@style/Album.Theme.Toolbar.Popup</item>-->
+    <!--</style>-->
+
+    <style name="TitleStytle">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:background">@color/title_bg</item>
+    </style>
+    　　
+    <style name="style_recoede">
+        <item name="android:layout_width">100dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:button">@color/translucent</item>
+        <item name="android:background">@drawable/bg_radio_record</item>
+        <item name="android:textColor">@drawable/text_color_record_radio</item>
+        <item name="android:padding">8dp</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+</resources>

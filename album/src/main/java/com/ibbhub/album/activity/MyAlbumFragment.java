@@ -1,4 +1,4 @@
-package com.ibbhub.albumdemo;
+package com.ibbhub.album.activity;
 
 import android.os.Environment;
 import android.widget.ImageView;
@@ -6,6 +6,7 @@ import android.widget.ImageView;
 import com.ibbhub.album.AlbumFragment;
 import com.ibbhub.album.ITaDecoration;
 import com.ibbhub.album.PicassoUtils;
+import com.ibbhub.album.R;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -43,6 +44,6 @@ public class MyAlbumFragment extends AlbumFragment {
 
     @Override
     public void onChooseModeChange(boolean isChoose) {
-        ((MainActivity)getActivity()).onChooseModeChange(isChoose);
+        ((AlbumActivity)getActivity()).onChooseModeChange(isChoose);
     }
 }

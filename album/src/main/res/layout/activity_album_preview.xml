@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AlbumPreviewActivity"
+    tools:context=".activity.AlbumPreviewActivity"
     android:id="@+id/clParent">
 
 </android.support.constraint.ConstraintLayout>

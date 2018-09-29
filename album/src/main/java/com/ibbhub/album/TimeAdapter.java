@@ -1,6 +1,6 @@
 package com.ibbhub.album;
 
-import com.ibbhub.adapterdelegate.IbbListDelegateAdapter;
+import com.ibbhub.album.adapter.IbbListDelegateAdapter;
 
 import java.util.List;
 
@@ -12,14 +12,18 @@ import java.util.List;
  class TimeAdapter extends IbbListDelegateAdapter<List<TimeBean>> {
 
     private TimeDelegate timeDelegate;
-    public TimeAdapter(List<TimeBean> data) {
+    public TimeAdapter() {
         addDelegate();
+
+    }
+
+    public void setData(List<TimeBean> data){
         setItems(data);
+        notifyDataSetChanged();
     }
 
     private void addDelegate() {
         timeDelegate = new TimeDelegate();
         delegatesManager.setFallbackDelegate(timeDelegate);
     }
-
 }

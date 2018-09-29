@@ -40,13 +40,13 @@ class DateUtils {
         return df.format(date);
     }
 
+    static  DateFormat dfstr = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
     public static Date convertToDate(String strDate) throws Exception {
-        DateFormat df = new SimpleDateFormat("yyyy:MM:dd");
-        return df.parse(strDate);
+        return dfstr.parse(strDate);
     }
 
     public static String converToString(long timeMillion) {
-        DateFormat df = new SimpleDateFormat("yyyy:MM:dd");
-        return df.format(timeMillion);
+//        DateFormat df = new SimpleDateFormat("yyyy:MM:dd");
+        return dfstr.format(timeMillion);
     }
 }

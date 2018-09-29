@@ -1,10 +1,14 @@
-package com.ibbhub.album;
+package com.ibbhub.album.activity;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+
+import com.ibbhub.album.AlbumBean;
+import com.ibbhub.album.AlbumPreviewFragment;
+import com.ibbhub.album.R;
 
 import java.util.ArrayList;
 

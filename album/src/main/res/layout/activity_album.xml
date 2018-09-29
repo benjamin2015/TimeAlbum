@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.ibbhub.album.activity.AlbumActivity">
+
+    <RelativeLayout
+        android:id="@+id/rl_head"
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:background="@color/title_bg">
+
+        <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/radio_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="15dp">
+
+            <RadioButton
+                android:id="@+id/rb_time_school"
+                style="@style/style_recoede"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_radio_record_left"
+                android:checked="true"
+                android:text="上学期间" />
+
+            <RadioButton
+                android:id="@+id/rb_time_holiday"
+                style="@style/style_recoede"
+                android:layout_height="wrap_content"
+                android:text="周末" />
+        </RadioGroup>
+
+        <Button
+            android:id="@+id/bt_head_right"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:background="@null"
+            android:gravity="center"
+            android:paddingBottom="10dp"
+            android:paddingLeft="23dp"
+            android:paddingRight="23dp"
+            android:paddingTop="10dp"
+            android:text="编辑"
+            android:textColor="#ffffff"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+
+    <FrameLayout
+        android:id="@+id/flParent"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rl_head"></FrameLayout>
+</android.support.constraint.ConstraintLayout>

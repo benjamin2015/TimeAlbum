@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#25B781</color>
+    <color name="colorPrimaryDark">#25B781</color>
+    <color name="title_bg">#25B781</color>
+
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="gray_bg">#f9f9f9</color>
+    <color name="translucent">#00000000</color>
+    <color name="white">#ffffff</color>
+
+    <color name="color_1">#15B880</color>
+    <color name="color_2">#333333</color>
+    <color name="color_3">#666666</color>
+    <color name="color_4">#999999</color>
+    <color name="color_5">#f8f8f8</color>
+    //背景色---
+    <color name="color_6">#ffffff</color>
+</resources>

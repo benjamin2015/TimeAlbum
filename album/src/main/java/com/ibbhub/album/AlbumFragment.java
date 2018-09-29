@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +14,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.Toast;
+
+import com.ibbhub.album.activity.AlbumPreviewActivity;
+import com.ibbhub.album.bean.RespBean;
+import com.ibbhub.album.bean.TakephotoRespBean;
+import com.ibbhub.album.net.RequestManager;
+import com.ibbhub.album.util.GsonUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -21,6 +29,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -46,6 +55,7 @@ public abstract class AlbumFragment extends Fragment implements TimeAlbumListene
     private AlbumBottomMenu album_menu;
 
     private List<TimeBean> choosedCache = new ArrayList<>();
+    private List<String> choosedList = new ArrayList<>();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,7 +75,12 @@ public abstract class AlbumFragment extends Fragment implements TimeAlbumListene
         super.onViewCreated(view, savedInstanceState);
         initView(view);
         initVariable();
-        initData();
+        updateDate(true);
+
+    }
+
+    public void updateDate(boolean isHand) {
+        loadData(isHand);
     }
 
     private void initVariable() {
@@ -73,7 +88,7 @@ public abstract class AlbumFragment extends Fragment implements TimeAlbumListene
             @Override
             public void onItemClick(AlbumBean albumBean, View v) {
                 TimeBean timeBean = new TimeBean();
-                timeBean.setDate(albumBean.date);
+                timeBean.setDate(albumBean.getDate().getTime());
                 if (isChooseMode) {
                     int index = choosedCache.indexOf(timeBean);
                     List<AlbumBean> mbList;
@@ -123,11 +138,26 @@ public abstract class AlbumFragment extends Fragment implements TimeAlbumListene
         album_menu = view.findViewById(R.id.album_menu);
 
         rc_list = view.findViewById(R.id.rc_list);
-        mAdapter = new TimeAdapter(mData);
+        mAdapter = new TimeAdapter();
 
         rc_list.setLayoutManager(new LinearLayoutManager(getContext()));
         rc_list.setAdapter(mAdapter);
+        mAdapter.setData(mData);
 
+        rc_list.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                //拿到最后一条的position
+                LinearLayoutManager llm = (LinearLayoutManager) rc_list.getLayoutManager();
+                int endCompletelyPosition = llm.findLastCompletelyVisibleItemPosition();
+                if (endCompletelyPosition == rc_list.getAdapter().getItemCount() - 1) {
+                    //执行加载更多的方法，无论是用接口还是别的方式都行
+                    int a = 5;
+                    int b = 5;
+                }
+            }
+        });
         album_menu.setMenuListener(new AlbumBottomMenu.AlubmBottomMenuListener() {
             @Override
             public void onDeleteClick() {
@@ -161,37 +191,37 @@ public abstract class AlbumFragment extends Fragment implements TimeAlbumListene
 
     private Calendar cal1 = Calendar.getInstance();
 
-    private void initData() {
-        List<File> fileList = TaHelper.getInstance().getSrcFiles();
+    private void initData(List<AlbumBean> fileList) {
+        if (fileList == null) return;
         Observable.fromIterable(fileList)
-                .flatMapIterable(new Function<File, Iterable<File>>() {
+                .flatMapIterable(new Function<AlbumBean, Iterable<AlbumBean>>() {
                     @Override
-                    public Iterable<File> apply(File file) throws Exception {
-                        return Arrays.asList(file.listFiles());
+                    public Iterable<AlbumBean> apply(AlbumBean file) throws Exception {
+                        return Arrays.asList(file);
                     }
                 })
-                .filter(new Predicate<File>() {
+                .filter(new Predicate<AlbumBean>() {
                     @Override
-                    public boolean test(File it) throws Exception {
-                        return it.getName().endsWith(".jpg") || it.getName().endsWith(".mp4");
+                    public boolean test(AlbumBean it) throws Exception {
+                        return it.getFile().endsWith(".jpg") || it.getFile().endsWith(".mp4");
                     }
                 })
-                .map(new Function<File, AlbumBean>() {
-                    @Override
-                    public AlbumBean apply(File file) throws Exception {
-                        Date fileDate = FileUtils.parseDate(file);
-                        cal1.setTime(fileDate);
-                        // 将时分秒,毫秒域清零
-                        cal1.set(Calendar.HOUR_OF_DAY, 0);
-                        cal1.set(Calendar.MINUTE, 0);
-                        cal1.set(Calendar.SECOND, 0);
-                        cal1.set(Calendar.MILLISECOND, 0);
-                        AlbumBean albumBean = new AlbumBean();
-                        albumBean.date = cal1.getTime().getTime();
-                        albumBean.path = file.getAbsolutePath();
-                        return albumBean;
-                    }
-                })
+//                .map(new Function<File, AlbumBean>() {
+//                    @Override
+//                    public AlbumBean apply(File file) throws Exception {
+//                        Date fileDate = FileUtils.parseDate(file);
+//                        cal1.setTime(fileDate);
+//                        // 将时分秒,毫秒域清零
+//                        cal1.set(Calendar.HOUR_OF_DAY, 0);
+//                        cal1.set(Calendar.MINUTE, 0);
+//                        cal1.set(Calendar.SECOND, 0);
+//                        cal1.set(Calendar.MILLISECOND, 0);
+//                        AlbumBean albumBean = new AlbumBean();
+//                        albumBean.date = cal1.getTime().getTime();
+//                        albumBean.path = file.getAbsolutePath();
+//                        return albumBean;
+//                    }
+//                })
                 .collect(new Callable<List<TimeBean>>() {
                     @Override
                     public List<TimeBean> call() throws Exception {
@@ -200,8 +230,16 @@ public abstract class AlbumFragment extends Fragment implements TimeAlbumListene
                 }, new BiConsumer<List<TimeBean>, AlbumBean>() {
                     @Override
                     public void accept(List<TimeBean> timeBeans, AlbumBean albumBean) throws Exception {
+                        cal1.setTime(albumBean.getDate());
+                        // 将时分秒,毫秒域清零
+                        cal1.set(Calendar.HOUR_OF_DAY, 0);
+                        cal1.set(Calendar.MINUTE, 0);
+                        cal1.set(Calendar.SECOND, 0);
+                        cal1.set(Calendar.MILLISECOND, 0);
+                        albumBean.setDate(cal1.getTime().getTime());
+
                         TimeBean timeBean = new TimeBean();
-                        timeBean.setDate(albumBean.date);
+                        timeBean.setDate(DateUtils.convertToDate(albumBean.getCreated()).getTime());
                         int index = timeBeans.indexOf(timeBean);
                         if (index >= 0) {
                             timeBeans.get(index).itemList.add(albumBean);
@@ -216,12 +254,11 @@ public abstract class AlbumFragment extends Fragment implements TimeAlbumListene
                 .subscribe(new BiConsumer<List<TimeBean>, Throwable>() {
                     @Override
                     public void accept(List<TimeBean> timeBeans, Throwable throwable) throws Exception {
-                        mData.addAll(timeBeans);
+//                        mData.addAll(timeBeans);
+                        mData = timeBeans;
                         sortList();
                     }
                 });
-
-
     }
 
     /**
@@ -239,15 +276,19 @@ public abstract class AlbumFragment extends Fragment implements TimeAlbumListene
                 return 1;
             }
         });
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                pb_loading.setVisibility(View.GONE);
-                rc_list.setVisibility(View.VISIBLE);
-                mAdapter.notifyDataSetChanged();
-            }
-        });
+        FragmentActivity activity = getActivity();
+        if (activity != null) {
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    pb_loading.setVisibility(View.GONE);
+                    rc_list.setVisibility(View.VISIBLE);
+                    mAdapter.setData(mData);
+                }
+            });
+        }
     }
+
 
     /**
      * 处理分享
@@ -257,14 +298,14 @@ public abstract class AlbumFragment extends Fragment implements TimeAlbumListene
         if (choosedCache.size() == 1 && choosedCache.get(0).itemList.size() == 1) {
             //单张
             AlbumBean albumBean = choosedCache.get(0).itemList.get(0);
-            TaShareManager.getInstance().openShare(getContext(), albumBean.path);
+            TaShareManager.getInstance().openShare(getContext(), albumBean.getFile());
         } else {
             //多张
             ArrayList<Uri> uriList = new ArrayList<>();
             for (int i = 0; i < choosedCache.size(); i++) {
                 for (AlbumBean mb :
                         choosedCache.get(i).itemList) {
-                    uriList.add(Uri.fromFile(new File(mb.path)));
+                    uriList.add(Uri.fromFile(new File(mb.getFile())));
                 }
             }
             TaShareManager.getInstance().openShare(getContext(), uriList);
@@ -276,6 +317,7 @@ public abstract class AlbumFragment extends Fragment implements TimeAlbumListene
      * 处理照片删除
      */
     private void processDelete() {
+
         //判断是多张还是单张
         if (choosedCache.size() == 1 && choosedCache.get(0).itemList.size() == 1) {
             //单张
@@ -291,19 +333,22 @@ public abstract class AlbumFragment extends Fragment implements TimeAlbumListene
             }
         }
         choosedCache.clear();
+
+//        removePhoto();
     }
 
     private void notifyAlbumRemove(AlbumBean albumBean) {
-        FileUtils.delete(albumBean.path);
-        int index = mData.indexOf(new TimeBean(albumBean.date));
+//        FileUtils.delete(albumBean.path);
+//        for ()
+        int index = mData.indexOf(new TimeBean(albumBean.getDate().getTime()));
         TimeBean tb = mData.get(index);
         tb.itemList.remove(albumBean);
         if (tb.itemList.size() == 0) {
             mData.remove(index);
         }
-        mAdapter.notifyItemRemoved(index);
+//        mAdapter.notifyItemRemoved(index);
+        mAdapter.notifyDataSetChanged();
     }
-
 
     /**
      * 取消选择
@@ -355,4 +400,79 @@ public abstract class AlbumFragment extends Fragment implements TimeAlbumListene
     public void start2Preview(ArrayList<AlbumBean> data, int pos) {
         AlbumPreviewActivity.start(getContext(), data, pos);
     }
+
+
+    public void loadData(boolean loadHand) {
+        pb_loading.setVisibility(View.VISIBLE);
+        rc_list.setVisibility(View.GONE);
+        if (loadHand) {
+            loadHand();
+        } else {
+            loadSteal();
+        }
+
+    }
+
+    public void loadSteal() {
+        HashMap<String, String> map = new HashMap();
+        map.put("cid", "20");
+        map.put("page", "2");
+        map.put("version", "20180620");
+        RequestManager.getInstance().requestPostByAsyn(RequestManager.url_GetCapture, map,
+                new RequestManager.ReqCallBack() {
+                    @Override
+                    public void onReqSuccess(Object result) {
+                        RespBean bean = GsonUtils.fromJson(result.toString(), RespBean.class);
+                        if (bean != null)
+                            initData(bean.getCaptureList());
+                    }
+
+                    @Override
+                    public void onReqFailed(String errorMsg) {
+
+                    }
+                });
+    }
+
+    public void loadHand() {
+        HashMap<String, String> map = new HashMap();
+        map.put("cid", "20");
+        map.put("page", "2");
+        map.put("version", "20180620");
+        RequestManager.getInstance().requestPostByAsyn(RequestManager.url_GetTakephoto, map,
+                new RequestManager.ReqCallBack() {
+                    @Override
+                    public void onReqSuccess(Object result) {
+                        TakephotoRespBean bean = GsonUtils.fromJson(result.toString(), TakephotoRespBean.class);
+                        if (bean != null)
+                            initData(bean.getTakephotoList());
+                    }
+
+                    @Override
+                    public void onReqFailed(String errorMsg) {
+
+                    }
+                });
+    }
+
+
+    private void removePhoto(List<String> list) {
+        HashMap<String, String> map = new HashMap();
+        map.put("takephoto_id", list.toString());
+        RequestManager.getInstance().requestPostByAsyn(RequestManager.url_Remove, map,
+                new RequestManager.ReqCallBack() {
+                    @Override
+                    public void onReqSuccess(Object result) {
+                        Toast.makeText(getContext(), "删除成功", Toast.LENGTH_SHORT).show();
+                        mAdapter.notifyDataSetChanged();
+//                        mAdapter.notifyItemRemoved();
+                    }
+
+                    @Override
+                    public void onReqFailed(String errorMsg) {
+                        Toast.makeText(getContext(), "删除失败", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
 }

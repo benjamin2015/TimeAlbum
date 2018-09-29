@@ -8,11 +8,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.ibbhub.album.AlbumFragment;
-import com.yanzhenjie.permission.Action;
-import com.yanzhenjie.permission.AndPermission;
-import com.yanzhenjie.permission.Permission;
-
-import java.util.List;
 /**
  * @description ：
  * @author ：chezi008 on 2018/8/19 15:12
@@ -24,7 +19,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        requestPermission();
         initVariable();
         initView();
     }
@@ -68,25 +62,25 @@ public class MainActivity extends AppCompatActivity {
         ft.commit();
     }
 
-    private void requestPermission() {
-        //获取storage权限
-        AndPermission.with(this)
-                .runtime()
-                .permission(Permission.Group.STORAGE)
-                .onGranted(new Action<List<String>>() {
-                    @Override
-                    public void onAction(List<String> data) {
-
-                    }
-                })
-                .onDenied(new Action<List<String>>() {
-                    @Override
-                    public void onAction(List<String> data) {
-
-                    }
-                })
-                .start();
-    }
+//    private void requestPermission() {
+//        //获取storage权限
+//        AndPermission.with(this)
+//                .runtime()
+//                .permission(Permission.Group.STORAGE)
+//                .onGranted(new Action<List<String>>() {
+//                    @Override
+//                    public void onAction(List<String> data) {
+//
+//                    }
+//                })
+//                .onDenied(new Action<List<String>>() {
+//                    @Override
+//                    public void onAction(List<String> data) {
+//
+//                    }
+//                })
+//                .start();
+//    }
 
     public void onChooseModeChange(boolean isChoose) {
         chooseMenu.setTitle(isChoose ? "取消" : "选择");
